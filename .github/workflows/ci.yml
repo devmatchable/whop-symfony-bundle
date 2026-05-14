@@ -8,14 +8,28 @@ on:
 jobs:
   ci:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        dependencies: [highest, lowest]
+    name: CI (${{ matrix.dependencies }} deps)
+    env:
+      # Vendor-originated deprecations from older Symfony releases on the
+      # lowest-deps leg must not fail the build — we test that the bundle
+      # works across the supported range, not that old Symfony is clean.
+      SYMFONY_DEPRECATIONS_HELPER: weak
     steps:
       - uses: actions/checkout@v4
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.4'
           coverage: none
-      - name: Install dependencies
-        run: composer install --no-interaction --no-progress --prefer-dist
+      - name: Install dependencies (highest)
+        if: matrix.dependencies == 'highest'
+        run: composer update --no-interaction --no-progress --prefer-dist
+      - name: Install dependencies (lowest)
+        if: matrix.dependencies == 'lowest'
+        run: composer update --no-interaction --no-progress --prefer-dist --prefer-lowest
       - name: PHP-CS-Fixer
         run: composer cs
       - name: PHPStan

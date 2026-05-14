@@ -24,8 +24,9 @@ return static function (ContainerConfigurator $container): void {
 
     // Psr18Client also implements PSR-17 RequestFactory/StreamFactory, so it is
     // passed for all three SDK constructor slots — no php-http/discovery needed.
-    // The SDK services are the bundle's public API: consumers autowire them by
-    // type-hint, so they are registered public to stay retrievable.
+    // WhopApiClient and WebhookVerifier are the bundle's public API: consumers
+    // autowire them by type-hint, so they are registered public to stay
+    // retrievable even when nothing in the bundle itself depends on them.
     $services->set(WhopApiClient::class)
         ->public()
         ->args([
@@ -43,8 +44,9 @@ return static function (ContainerConfigurator $container): void {
     $services->set(EventDispatchingWebhookHandler::class)
         ->args([service('event_dispatcher')]);
 
-    $services->alias(WhopWebhookHandlerInterface::class, EventDispatchingWebhookHandler::class)
-        ->public();
+    // Private: production code reaches the handler only through the controller's
+    // constructor injection. Tests fetch it via the test service container.
+    $services->alias(WhopWebhookHandlerInterface::class, EventDispatchingWebhookHandler::class);
 
     $services->set(WhopWebhookController::class)
         ->args([

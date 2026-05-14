@@ -14,6 +14,11 @@ use Symfony\Component\HttpFoundation\Response;
  * Bundle-owned webhook endpoint. Verifies the Standard Webhooks signature with
  * the SDK's {@see WebhookVerifier}, decodes the JSON body, and delegates to the
  * configured {@see WhopWebhookHandlerInterface}.
+ *
+ * Field-level validation of the payload is intentionally deferred to the
+ * handler/listener: the SDK models no incoming-webhook schema, so the handler
+ * receives the decoded array as-is. A 400 is returned only for a body that is
+ * not decodable JSON or whose top-level value is not a JSON object.
  */
 final readonly class WhopWebhookController
 {
