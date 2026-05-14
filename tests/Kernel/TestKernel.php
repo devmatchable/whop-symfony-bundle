@@ -17,9 +17,11 @@ final class TestKernel extends Kernel
 
     private readonly string $cacheId;
 
-    private bool $hadErrorHandler = false;
+    /** @var list<callable> */
+    private array $errorHandlerSnapshot = [];
 
-    private bool $hadExceptionHandler = false;
+    /** @var list<callable> */
+    private array $exceptionHandlerSnapshot = [];
 
     /**
      * @param array<string, mixed> $whopConfig  config passed to the `whop` extension
@@ -30,6 +32,21 @@ final class TestKernel extends Kernel
         private readonly ?\Closure $extraConfig = null,
     ) {
         $this->cacheId = uniqid('whop_', true);
+
+        // FrameworkBundle::boot() and DebugHandlersListener register global
+        // error/exception handlers that are never restored. Snapshot the full
+        // handler stacks now so shutdown() can rebuild them exactly and PHPUnit's
+        // risky-test check (which compares the whole stack) stays clean.
+        $this->errorHandlerSnapshot = self::drainErrorHandlers();
+        foreach ($this->errorHandlerSnapshot as $handler) {
+            set_error_handler($handler);
+        }
+
+        $this->exceptionHandlerSnapshot = self::drainExceptionHandlers();
+        foreach ($this->exceptionHandlerSnapshot as $handler) {
+            set_exception_handler($handler);
+        }
+
         parent::__construct('test', true);
     }
 
@@ -38,39 +55,63 @@ final class TestKernel extends Kernel
         return [new FrameworkBundle(), new WhopBundle()];
     }
 
-    /**
-     * FrameworkBundle::boot() registers a global error/exception handler that it
-     * never restores. Snapshot the handler state so {@see shutdown()} can undo it
-     * and PHPUnit's risky-test check stays clean.
-     */
-    public function boot(): void
-    {
-        $errorHandler = set_error_handler(static fn (): bool => false);
-        restore_error_handler();
-        $this->hadErrorHandler = null !== $errorHandler;
-
-        $exceptionHandler = set_exception_handler(null);
-        set_exception_handler($exceptionHandler);
-        $this->hadExceptionHandler = null !== $exceptionHandler;
-
-        parent::boot();
-    }
-
     public function shutdown(): void
     {
         parent::shutdown();
 
-        $errorHandler = set_error_handler(static fn (): bool => false);
-        restore_error_handler();
-        if (null !== $errorHandler && !$this->hadErrorHandler) {
+        // Drain whatever the kernel left on the handler stacks and rebuild the
+        // exact state captured in the constructor.
+        self::drainErrorHandlers();
+        foreach ($this->errorHandlerSnapshot as $handler) {
+            set_error_handler($handler);
+        }
+
+        self::drainExceptionHandlers();
+        foreach ($this->exceptionHandlerSnapshot as $handler) {
+            set_exception_handler($handler);
+        }
+    }
+
+    /**
+     * Pops every registered error handler and returns them bottom-to-top.
+     *
+     * @return list<callable>
+     */
+    private static function drainErrorHandlers(): array
+    {
+        $handlers = [];
+        while (true) {
+            $handler = set_error_handler(static fn (): bool => false);
+            restore_error_handler();
+            if (null === $handler) {
+                break;
+            }
+            $handlers[] = $handler;
             restore_error_handler();
         }
 
-        $exceptionHandler = set_exception_handler(null);
-        set_exception_handler($exceptionHandler);
-        if (null !== $exceptionHandler && !$this->hadExceptionHandler) {
+        return array_reverse($handlers);
+    }
+
+    /**
+     * Pops every registered exception handler and returns them bottom-to-top.
+     *
+     * @return list<callable>
+     */
+    private static function drainExceptionHandlers(): array
+    {
+        $handlers = [];
+        while (true) {
+            $handler = set_exception_handler(static fn (\Throwable $e): null => null);
+            restore_exception_handler();
+            if (null === $handler) {
+                break;
+            }
+            $handlers[] = $handler;
             restore_exception_handler();
         }
+
+        return array_reverse($handlers);
     }
 
     private function configureContainer(ContainerConfigurator $container): void
@@ -91,7 +132,7 @@ final class TestKernel extends Kernel
 
     private function configureRoutes(RoutingConfigurator $routes): void
     {
-        $routes->import('@WhopBundle/config/routes.xml');
+        $routes->import('@WhopBundle/config/routes.php');
     }
 
     public function getCacheDir(): string
@@ -102,5 +143,14 @@ final class TestKernel extends Kernel
     public function getLogDir(): string
     {
         return sys_get_temp_dir().'/whop-bundle-tests/'.$this->cacheId.'/log';
+    }
+
+    /**
+     * Keep FrameworkBundle's auto-generated `reference.php` out of the repo by
+     * pointing the kernel config dir at the per-run temp directory.
+     */
+    public function getConfigDir(): string
+    {
+        return sys_get_temp_dir().'/whop-bundle-tests/'.$this->cacheId.'/config';
     }
 }
