@@ -1,0 +1,55 @@
+{
+    "name": "devmatchable/whop-symfony-bundle",
+    "description": "Symfony bundle for the Whop PHP SDK — autowired client, webhook verification, and an overridable webhook controller.",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "keywords": ["whop", "symfony", "bundle", "payments", "webhook"],
+    "authors": [
+        { "name": "Tolu Tourialai", "email": "tolu@matchable.dev" }
+    ],
+    "support": {
+        "issues": "https://github.com/devmatchable/whop-symfony-bundle/issues",
+        "source": "https://github.com/devmatchable/whop-symfony-bundle"
+    },
+    "require": {
+        "php": "^8.4",
+        "devmatchable/whop-php-sdk": "^0.0.1",
+        "psr/http-client": "^1.0",
+        "symfony/config": "^7.0",
+        "symfony/dependency-injection": "^7.0",
+        "symfony/event-dispatcher": "^7.0",
+        "symfony/framework-bundle": "^7.0",
+        "symfony/http-client": "^7.0",
+        "symfony/http-foundation": "^7.0",
+        "symfony/http-kernel": "^7.0"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.62",
+        "phpstan/phpstan": "^2.0",
+        "phpunit/phpunit": "^11.0",
+        "symfony/phpunit-bridge": "^7.0"
+    },
+    "repositories": [
+        { "type": "vcs", "url": "https://github.com/devmatchable/whop-php-sdk" }
+    ],
+    "autoload": {
+        "psr-4": { "Matchable\\Whop\\Bundle\\": "src/" }
+    },
+    "autoload-dev": {
+        "psr-4": { "Matchable\\Whop\\Bundle\\Tests\\": "tests/" }
+    },
+    "scripts": {
+        "cs": "php-cs-fixer fix --dry-run --diff",
+        "cs:fix": "php-cs-fixer fix",
+        "stan": "phpstan analyse",
+        "test": "phpunit"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
