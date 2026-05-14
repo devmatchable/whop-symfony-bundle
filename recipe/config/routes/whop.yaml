@@ -1,0 +1,2 @@
+whop:
+    resource: '@WhopBundle/config/routes.php'

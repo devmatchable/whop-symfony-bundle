@@ -1,0 +1,13 @@
+{
+    "bundles": {
+        "Matchable\\Whop\\Bundle\\WhopBundle": ["all"]
+    },
+    "copy-from-recipe": {
+        "config/": "%CONFIG_DIR%/",
+        "src/": "%SRC_DIR%/"
+    },
+    "env": {
+        "WHOP_API_KEY": "",
+        "WHOP_WEBHOOK_SECRET": ""
+    }
+}

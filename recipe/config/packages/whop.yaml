@@ -1,0 +1,6 @@
+whop:
+    api_key: '%env(WHOP_API_KEY)%'
+    webhook_secret: '%env(WHOP_WEBHOOK_SECRET)%'
+    # base_url: 'https://api.whop.com/api/v1'
+    # http_client: null
+    # webhook_path: '/_whop/webhook'
