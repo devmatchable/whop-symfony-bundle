@@ -25,9 +25,15 @@ return static function (ContainerConfigurator $container): void {
     // Psr18Client implements PSR-17 RequestFactory/StreamFactory, so it covers
     // all three SDK constructor slots and bypasses the SDK's php-http/discovery
     // fallback. nyholm/psr7 underpins it for actual PSR-7 message construction.
-    // WhopApiClient and WebhookVerifier are the bundle's public API: consumers
-    // autowire them by type-hint, so they are registered public to stay
-    // retrievable even when nothing in the bundle itself depends on them.
+    //
+    // WhopApiClient and WebhookVerifier are the bundle's public-facing API:
+    // nothing inside the bundle references them, so without `->public()` the
+    // container compiler removes them entirely as unused private services
+    // (Symfony's RemoveUnusedDefinitionsPass). Consumers autowire them by
+    // type-hint in their own services — which would resolve to nothing if the
+    // services were gone. Bundle-facade services like these are the documented
+    // exception to "all services private". Tests reach them via
+    // test.service_container.
     $services->set(WhopApiClient::class)
         ->public()
         ->args([
