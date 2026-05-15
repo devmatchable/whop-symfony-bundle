@@ -22,8 +22,9 @@ return static function (ContainerConfigurator $container): void {
     $services->set('whop.http_client', Psr18Client::class)
         ->args([service('whop.inner_http_client')]);
 
-    // Psr18Client also implements PSR-17 RequestFactory/StreamFactory, so it is
-    // passed for all three SDK constructor slots — no php-http/discovery needed.
+    // Psr18Client implements PSR-17 RequestFactory/StreamFactory, so it covers
+    // all three SDK constructor slots and bypasses the SDK's php-http/discovery
+    // fallback. nyholm/psr7 underpins it for actual PSR-7 message construction.
     // WhopApiClient and WebhookVerifier are the bundle's public API: consumers
     // autowire them by type-hint, so they are registered public to stay
     // retrievable even when nothing in the bundle itself depends on them.
