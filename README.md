@@ -24,21 +24,6 @@ overridable, bundle-owned webhook controller.
 composer require devmatchable/whop-symfony-bundle
 ```
 
-The bundle depends on `devmatchable/whop-php-sdk`, which is not yet published on
-Packagist. Until it is, add a VCS repository for the SDK to your application's
-`composer.json` before running the `composer require` command above:
-
-```json
-{
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/devmatchable/whop-php-sdk"
-        }
-    ]
-}
-```
-
 If [Symfony Flex](https://symfony.com/doc/current/setup/flex.html) is installed, the
 recipe registers the bundle, drops the config and route files, and appends the
 required environment variables automatically. Otherwise, follow the manual setup
