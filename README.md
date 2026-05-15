@@ -4,6 +4,11 @@
 [![PHP](https://img.shields.io/badge/PHP-8.4%2B-777BB4?logo=php&logoColor=white)](https://www.php.net/)
 [![PHPStan](https://img.shields.io/badge/PHPStan-level%20max-2a6496)](https://phpstan.org/)
 
+> [!WARNING]
+> **This package is in active development and is not yet ready for production use.**
+> The public API may change at any time before version `1.0.0` is released.
+> Please do not depend on it in production projects until a stable release is published.
+
 Symfony bundle for the [Whop PHP SDK](https://github.com/devmatchable/whop-php-sdk) —
 autowires the `WhopApiClient` and `WebhookVerifier` from configuration and ships an
 overridable, bundle-owned webhook controller.
