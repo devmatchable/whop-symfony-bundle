@@ -13,7 +13,7 @@ Once 1.0.0 is released, this section will be updated with a supported-versions t
 Use one of these private channels:
 
 1. **GitHub private vulnerability reporting** (preferred) — submit a report via the repository's [Security tab](https://github.com/devmatchable/whop-symfony-bundle/security/advisories/new).
-2. **Email** — send details to **tolu@matchable.dev**.
+2. **Email** — send details to [Tolu T.](mailto:tolu@matchable.dev) or [Jeroen M.](mailto:jeroen@matchable.dev).
 
 Please include:
 

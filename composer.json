@@ -3,13 +3,16 @@
     "description": "Symfony bundle for the Whop PHP SDK — autowired client, webhook verification, and an overridable webhook controller.",
     "type": "symfony-bundle",
     "license": "MIT",
+    "homepage": "https://github.com/devmatchable/whop-symfony-bundle",
     "keywords": ["whop", "symfony", "bundle", "payments", "webhook"],
     "authors": [
-        { "name": "Tolu Tourialai", "email": "tolu@matchable.dev" }
+        { "name": "Tolu Tourialai", "email": "tolu@matchable.dev", "role": "Lead developer & Maintainer" },
+        { "name": "Jeroen Moonen",  "email": "jeroen@matchable.dev", "role": "Co-Maintainer" }
     ],
     "support": {
         "issues": "https://github.com/devmatchable/whop-symfony-bundle/issues",
-        "source": "https://github.com/devmatchable/whop-symfony-bundle"
+        "source": "https://github.com/devmatchable/whop-symfony-bundle",
+        "security": "https://github.com/devmatchable/whop-symfony-bundle/security/policy"
     },
     "require": {
         "php": "^8.4",
@@ -50,5 +53,10 @@
         }
     },
     "minimum-stability": "stable",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.x-dev"
+        }
+    }
 }
