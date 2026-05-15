@@ -30,9 +30,16 @@ jobs:
       - name: Install dependencies (lowest)
         if: matrix.dependencies == 'lowest'
         run: composer update --no-interaction --no-progress --prefer-dist --prefer-lowest
+      # Static analysis + style only run on the highest matrix.
+      # Dev tooling is not a runtime concern for consumers — running CS-Fixer
+      # and PHPStan against old type stubs from the lowest install adds noise
+      # without insurance value. The lowest leg still proves the package
+      # *installs and the test suite passes* on its declared semver floor.
       - name: PHP-CS-Fixer
+        if: matrix.dependencies == 'highest'
         run: composer cs
       - name: PHPStan
+        if: matrix.dependencies == 'highest'
         run: composer stan
       - name: PHPUnit
         run: composer test
