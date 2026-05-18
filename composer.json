@@ -19,21 +19,21 @@
         "devmatchable/whop-php-sdk": "^0.0.1",
         "nyholm/psr7": "^1.8",
         "psr/http-client": "^1.0",
-        "symfony/config": "^7.4",
-        "symfony/dependency-injection": "^7.4",
-        "symfony/event-dispatcher": "^7.4",
-        "symfony/framework-bundle": "^7.4",
-        "symfony/http-client": "^7.4",
-        "symfony/http-foundation": "^7.4",
-        "symfony/http-kernel": "^7.4",
+        "symfony/config": "^7.4 || ^8.0",
+        "symfony/dependency-injection": "^7.4 || ^8.0",
+        "symfony/event-dispatcher": "^7.4 || ^8.0",
+        "symfony/framework-bundle": "^7.4 || ^8.0",
+        "symfony/http-client": "^7.4 || ^8.0",
+        "symfony/http-foundation": "^7.4 || ^8.0",
+        "symfony/http-kernel": "^7.4 || ^8.0",
         "symfony/routing": "^7.4 || ^8.0"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.80",
-        "infection/infection": "^0.29",
+        "infection/infection": "^0.33",
         "phpstan/phpstan": "^2.0",
-        "phpunit/phpunit": "^11.0",
-        "symfony/phpunit-bridge": "^7.4"
+        "phpunit/phpunit": "^13.0",
+        "symfony/phpunit-bridge": "^7.4 || ^8.0"
     },
     "autoload": {
         "psr-4": { "Matchable\\Whop\\Bundle\\": "src/" }
