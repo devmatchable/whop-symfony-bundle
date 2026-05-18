@@ -30,6 +30,7 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.80",
+        "infection/infection": "^0.29",
         "phpstan/phpstan": "^2.0",
         "phpunit/phpunit": "^11.0",
         "symfony/phpunit-bridge": "^7.4"
@@ -44,12 +45,14 @@
         "cs": "php-cs-fixer fix --dry-run --diff",
         "cs:fix": "php-cs-fixer fix",
         "stan": "phpstan analyse",
-        "test": "phpunit"
+        "test": "phpunit",
+        "infection": "infection"
     },
     "config": {
         "sort-packages": true,
         "allow-plugins": {
-            "php-http/discovery": true
+            "php-http/discovery": true,
+            "infection/extension-installer": true
         }
     },
     "minimum-stability": "stable",
